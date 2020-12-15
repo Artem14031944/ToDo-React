@@ -1,4 +1,22 @@
 .App {
-  font-family: sans-serif;
-  text-align: center;
+width: 1200px;
+margin: 0 auto;
+}
+.item-search {
+  display: flex;
+  justify-content: flex-end;
+}
+.item-form {
+  display: flex;
+  justify-content: space-between;
+}
+.category {
+  width: 30%;
+}
+.task {
+  width: 65%;
+}
+.taskForm {
+  display: flex;
+  justify-content: flex-end;
 }

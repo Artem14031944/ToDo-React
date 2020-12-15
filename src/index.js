@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import Typography from '@material-ui/core/Typography';
+import { Provider } from 'react-redux';
+import Tasks from './Tasks'
 import './styles.css';
+import configureStore from './configureStore'
+
+const store = configureStore()
 
 const App = () => {
+
   return (
-    <div className="App">
-      <Typography component="h1" variant="h2">
-        Todos
-      </Typography>
-    </div>
+    <Provider store={store}>
+    <Tasks />
+  </Provider>
   );
 };
 
 const rootElement = document.getElementById('root');
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(
+    <App />
+, rootElement);

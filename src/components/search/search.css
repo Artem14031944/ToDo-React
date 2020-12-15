@@ -1,0 +1,13 @@
+.search {
+  text-align: center;
+  font: 400 27px 'Roboto';
+  vertical-align: button;
+  margin: 25px 15px 0 0;
+}
+.text {
+  display: flex;
+  vertical-align: middle;
+}
+input {
+  margin: 33px 15px 0 0;
+}
