@@ -9,9 +9,9 @@ import SearchTodo from './components/search/search';
 import CategoryList from './components/category/category';
 import addCategories from './components/addCategories/addCategory';
 import { addCategory, addTask, getCategories } from './actions';
-import { Provider } from 'react-redux';
-import './styles.css';
 import AddCategories from './components/addCategories/addCategory';
+import { createStore } from 'redux';
+import './styles.css';
 
 
 const categories = [
@@ -21,23 +21,29 @@ const categories = [
 ];
 
 const Tasks = () => {
-  useEffect(() => {
-    dispatch(getCategories())
-  }, []);
-  const categories = useSelector(state =>state.toDoReducer.categories);
+  // useEffect(() => {
+  //   dispatch(getCategories())
+  // }, []);
+  const dispatch = useDispatch()
+  const categories = useSelector((state) => state.categories);
   // console.log('categories', categories)
   // const { todos, addTodo, deleteTodo } = useTodoState(activeCategory);
   const [activeCategory, setActiveCategory] = useState('');
 
-  const dispatch = useDispatch()
+
+  // const [state, dispatch] = useReducer(reducer,JSON.parse(localStorage.getItem('todos'))); 
+ 
+  // useEffect(()=> {
+  //   localStorage.setItem('todos', JSON.stringify(state))
+  //  }, [state])
+
 
   const addNewCategory = (data) => {
     const newCategory = { id: Date.now(), parentId: null, title: data, children: null}
     dispatch(addCategory(newCategory))
   }
-
   const addTodo = (data) => {
-    const newTask = { id: Date.now(),  category: activeCategory,  text: data}
+    const newTask = { id: Date.now(),  category: activeCategory, text: data}
     dispatch(addTask(newTask))
   }
 

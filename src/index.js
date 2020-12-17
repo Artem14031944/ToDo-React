@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import Tasks from './Tasks'
+import Tasks from './Tasks';
+import configureStore from './configureStore';
 import './styles.css';
-import configureStore from './configureStore'
 
 const store = configureStore()
 

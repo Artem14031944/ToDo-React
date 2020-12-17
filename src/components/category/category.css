@@ -1,6 +1,6 @@
 li {
   list-style-type: none;
-  font: 400 15px 'Roboto';
+  font: 400 16px 'Roboto';
   user-select: none;
   margin-top: 5px;
 }
@@ -10,8 +10,11 @@ li {
   background-color: #3f51b5;
   border-radius: 7px;
   color: #fff;
-  cursor: pointer;
   outline: none;
+}
+.btnList-left:hover{
+  background-color: yellowgreen;
+  cursor: pointer;
 }
 .active {
   background-color: floralwhite;
@@ -26,7 +29,10 @@ li {
   background-color: #3f51b5;
   border-radius: 7px;
   color: #fff;
-  cursor: pointer;
   outline: none;
   margin-left: 5px;
+  cursor: pointer;
+}
+.btnList:hover {
+  background-color: yellowgreen;
 }

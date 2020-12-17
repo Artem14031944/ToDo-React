@@ -9,7 +9,7 @@ const initialState = {
   tasks: []
 }
 
-const toDoReducer = (state = initialState, action) => {
+function toDoReducer(state = initialState, action)  {
   switch (action.type) {
    case constants.ADD_CATEGORY:
     return {
@@ -32,6 +32,21 @@ const toDoReducer = (state = initialState, action) => {
         ...state,
         categories: [ ...updatedItems ]
     }
+
+    //////Tasks
+    
+    case constants.ADD_TASK:
+      return {
+          ...state,
+          tasks: [...state.tasks, action.data] 
+      }
+    case constants.EDIT_TASK:
+        const updatedTasks = state.tasks.map(item => {
+          if (item.id === action.data.id) {
+            item = action.data
+          }
+      return item
+        })
    default:
     return state
   }
