@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import Tasks from './Tasks';
+import Tasks from './ToDo-List';
 import configureStore from './configureStore';
 import './styles.css';
 
@@ -11,8 +11,8 @@ const App = () => {
 
   return (
     <Provider store={store}>
-    <Tasks />
-  </Provider>
+      <Tasks />
+    </Provider>
   );
 };
 

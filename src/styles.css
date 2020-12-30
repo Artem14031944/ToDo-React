@@ -11,10 +11,10 @@ margin: 0 auto;
   justify-content: space-between;
 }
 .category {
-  width: 30%;
+  width: 42%;
 }
 .task {
-  width: 65%;
+  width: 58%;
 }
 .taskForm {
   display: flex;

@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
 import './search.css';
 
-const SearchTodo = ({ saveTodo }) => {
+const SearchTodo = ({ saveTodo, handleShowDone, showDone }) => {
    const [value, setValue] = useState('');
+
+ 
     return (
-    <form >
+     <form >
       <div className="text">
-      <input type="checkbox" />
-      <span className="search">Show done</span>
-      <TextField
-        variant="outlined"
-        placeholder="Search..."
-        margin="normal" 
-        onChange={value}
-        onKeyPress={setValue}
+        <Checkbox
+          tabIndex={-1}  
+          checked={showDone}
+          onChange={handleShowDone}
+          size="small"
+          inputProps={{ 'aria-label': 'checkbox with small size' }}
         />
-      </div>
-    </form>
+          <span className="search">Show done</span>
+          <TextField
+            variant="outlined"
+            placeholder="Search..."
+            margin="normal" 
+            onChange={(e) => setValue(e.target.value)}
+            onKeyPress={() => saveTodo(value)}
+           />
+       </div>
+     </form>
   );
 };
+
 export default SearchTodo;

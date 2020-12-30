@@ -36,19 +36,23 @@ export const getTasks = () => ({
   type: constants.GET_TASKS,
 })
 
-export const editTask = () => ({
+export const editTask = (data) => ({
   type: constants.EDIT_TASK,
+  data
 })
 
-export const addTask = () => ({
+export const addTask = (data) => ({
   type: constants.ADD_TASK,
+  data
 })
 
-export const doneTask = () => ({
+export const doneTask = (data) => ({
   type: constants.DONE_TASK,
+  data
 })
 
-export const sendTask = () => ({
+export const sendTask = (data) => ({
   type: constants.SEND_TASK,
+  data
 })
 

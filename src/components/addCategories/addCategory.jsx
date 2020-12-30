@@ -10,17 +10,16 @@ const AddCategories = ({ saveTodo }) => {
         saveTodo(value);
         setValue('');
       }}
-    >
+     >
       <TextField
         variant="outlined"
         placeholder="Category Add"
         margin="normal" 
-        onChange={event => {
-          setValue(event.target.value);
-        }}
+        onChange={e => setValue(e.target.value)}
         value={value}
         />
     </form>
   );
 };
+
 export default AddCategories;
