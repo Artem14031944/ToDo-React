@@ -18,6 +18,6 @@ export default props => {
   }
   
   return(
-   <>  {props.children} </>
+   <>{props.children} </>
   )
 }
