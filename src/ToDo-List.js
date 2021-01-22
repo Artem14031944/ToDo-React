@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Typography  from '@material-ui/core/Typography';
-import TodoForm from './components/todoForm/TodoForm';
+import TodoForm from './components/todoForm/todoForm';
 import TodoList from './components/todoList/todoList';
 import SearchTodo from './components/search/search';
 import CategoryList from './components/category/category';
-import addCategories from './components/addCategories/addCategory';
-import { addCategory, addTask, editTask, getCategories } from './actions';
+import { addCategory, addTask, editTask, getCategories, getSearch, getDoneSearch } from './actions';
 import AddCategories from './components/addCategories/addCategory';
 import Switches from './components/switch/switch';
-import { createStore } from 'redux';
 import ProgressBar from './components/progressBar/progressBar';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from './components/modal/modal';
+import { Scrollbars } from 'react-custom-scrollbars';
 import './styles.css';
 
 
@@ -24,34 +22,44 @@ const Tasks = () => {
 
   const dispatch = useDispatch()
   const categories = useSelector((state) => state.categories);
-  const todos = useSelector((state) => state.tasks);
-  // const todos = useSelector((state) => state.tasks.filter(item => item.text.toLowerCase().includes(state.searchText && state.searchText.toLowerCase())));
+  const progress = useSelector((state) => state.progress);
+  const todos = useSelector((state) => {
+     if (state.searchText === '') {
+       if(state.activeCategory > 0) {
+        const category = state.categories.find(item => item.id === state.activeCategory)
+        if(category.children && category.children.length > 0) {
+          const newChildren = []
+          category.children.forEach(subcategory => {
+            const subcategoryTasks = state.tasks.filter(item => item.category === subcategory.id)
+            newChildren.push(...subcategoryTasks)
+          });
+          return newChildren
+        } else {
+          const getCategoriesOne = state.tasks.filter(item => item.category === state.activeCategory)
+          return getCategoriesOne
+        }
+       }
+       return state.tasks
+     } else {
+       return state.tasks.filter(item => item.text.toLowerCase().includes(state.searchText.toLowerCase()))
+     }});
+  const activeCategory = useSelector((state) => state.activeCategory);
   const search = useSelector((state) => state.searchText);
-  const [activeCategory, setActiveCategory] = useState('');
   const [open, setOpen] = useState(false);
   const [activeTodo, setActiveTodo] = useState('');
-  const [renderTodos, setRenderTodos] = useState(todos);
+  // const [renderTodos, setRenderTodos] = useState(todos);
   const [showDone, setShowDone] = useState(false);
+  
 
-
-
-  // const [state, dispatch] = useReducer(reducer,JSON.parse(localStorage.getItem('todos'))); 
- 
-  // useEffect(()=> {
-  //   localStorage.setItem('todos', JSON.stringify(state))
-  //  }, [state])
-
-  const searchTodo = (data) => {
-    if(data.length > 0) {
-      if(showDone)  {
-        const newTasks = todos.filter(item => item.done).filter(item => item.text.toLowerCase().includes(data.toLowerCase()))
-          setRenderTodos(newTasks)
-      } else {
-        const newTasks = todos.filter(item => item.text.toLowerCase().includes(data.toLowerCase()))
-        setRenderTodos(newTasks)
-      }
+  useEffect(()=> {
+    localStorage.setItem('todos', JSON.stringify(todos))
+   }, [])
+  
+  const searchTodo = data => {
+    if(showDone)  {
+      dispatch(getDoneSearch(data))
     } else {
-      setRenderTodos(todos)
+      dispatch(getSearch(data))
     }
   };
 
@@ -75,12 +83,20 @@ const Tasks = () => {
   };
 
   const addTodo = (data) => {
-    const newTask = { id: uuidv4(),  category: activeCategory, text: data, done: false}
+    const newTask = { id: uuidv4(), category: activeCategory, text: data, done: false}
     dispatch(addTask(newTask))
+    const parse = JSON.parse(localStorage.getItem('todos'));
+    const newItems = [...parse, newTask];
+    localStorage.setItem('todos', JSON.stringify(newItems));
   };
-
+  
   return (
-    <div className="App">
+    <Scrollbars 
+      style={{ width: '100%', height: 750, }}
+      renderTrackVertical={props => <div {...props} className="track-vertical"/>}
+      renderThumbVertical={props => <div {...props} className="thumb-vertical"/>}
+      >
+     <div className="App">
       <div className="item-header">
       <Switches />
        <Typography component="h1" variant="h2">
@@ -93,26 +109,28 @@ const Tasks = () => {
           handleShowDone={() => setShowDone(!showDone)}
           search={search}   
           saveTodo={todoText => {
-            const trimmedText = todoText.trim();
-            if (trimmedText.length > 0) {
-              searchTodo(trimmedText);}}} 
+            const addText = todoText.trim();
+              searchTodo(addText);}}
         />
        </div>
-         <ProgressBar todos={todos} />
+         <ProgressBar
+          todos={todos}
+          // progress={progress}
+           />
           <div className="item-form">
             <div className = "category">
               <AddCategories
-                saveTodo={todoText => {
-                  const trimmedText = todoText.trim();
+                saveTodo={cateText => {
+                  const trimmedText = cateText.trim();
                 if (trimmedText.length > 0) {
-                  addNewCategory(trimmedText);}}} /> 
+                  addNewCategory(trimmedText);}}}
+              /> 
                 <CategoryList
                   categories={categories}
                   parentId={null}  
                   className='category' 
-                  activeCategory={activeCategory} 
-                  setActiveCategory={setActiveCategory}
-                 /> 
+                  activeCategory={activeCategory}
+                /> 
             </div>
                <div className="task">
                 <div className="taskForm">
@@ -120,20 +138,34 @@ const Tasks = () => {
                     saveTodo={todoText => {
                       const trimmedText = todoText.trim();
                       if (trimmedText.length > 0) {
-                      addTodo(trimmedText);}}} />
+                      addTodo(trimmedText);}}}
+                  />
                </div>
               <TodoList 
-                todos={renderTodos} 
+                todos={todos} 
                 handleCheckbox={handleCheckbox} 
-                handleEd={handleEd}/>
+                handleEd={handleEd}
+              />
             <Modal 
               open={open} 
               handleClose={() => handleClose()} 
-              todo={activeTodo} />
+              todo={activeTodo} 
+            />
          </div>
         </div>  
       </div>
+    </Scrollbars>
   );
 };
 
 export default Tasks;
+
+
+
+// git filter-branch --env-filter '
+//     if [ "$GIT_AUTHOR_NAME" = "Yazeed Bzadough" ]; then \
+//         export GIT_AUTHOR_NAME="Artem Melnikov" GIT_AUTHOR_EMAIL="artem141221@gmail.com"; \
+//     fi
+//     '
+
+//     yazeedb 

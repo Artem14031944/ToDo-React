@@ -9,3 +9,12 @@ li {
   color: crimson;
   vertical-align: middle;
 }
+.active {
+  border-left: 3px solid crimson;
+  height: 34px;
+  width: 440px;
+  padding-left: 2px;
+}
+.activeSub {
+  border: none;
+}

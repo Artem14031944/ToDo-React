@@ -1,9 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-export default function ProgressBar({todos}) {
+export default function ProgressBar({ todos }) {
   let progress = 0
   let counter = 0
    for(let i = 0; i < todos.length; i++){
@@ -14,7 +13,7 @@ export default function ProgressBar({todos}) {
 
   return (
     <div styles={{width: '100%'}}>
-      <LinearProgress variant="determinate" value={progress} />
+      <LinearProgress variant="determinate"  value={progress} />
     </div>
   );
-}
+};

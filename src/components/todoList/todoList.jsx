@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 const TodoList = ({ todos, handleCheckbox, handleEd }) => {
   const handleChange = (e, todo) => {
     const checked = e.target.checked
-    handleCheckbox(checked, todo)
+    handleCheckbox(checked, todo) 
   };
 
   return(

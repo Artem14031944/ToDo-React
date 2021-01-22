@@ -27,6 +27,13 @@ html {
 .MuiOutlinedInput-root-78 .MuiOutlinedInput-notchedOutline-85 {
   border-color: gray;
 }
+.MuiTypography-subheading-30 {
+  color: gray;
+  font-size: 20px;
+}
+.track-vertical {
+  background: #808080;
+}
 
 `
 export default darkStyles

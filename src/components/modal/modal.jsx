@@ -57,14 +57,14 @@ export default function Modal({ todo, open, handleClose }) {
               value={value}
               onChange={handleText}
               // //defaultValue={todo.text}
-              />
+             />
              <DialogContentText 
                color = 'black'>
                 <Checkbox 
                   tabIndex={-1} 
                   checked={done} 
                   onChange={handleCheckbox}
-                />
+              />
               Done
              </DialogContentText>
             </DialogContent>

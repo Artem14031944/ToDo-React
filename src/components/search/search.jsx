@@ -4,9 +4,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import './search.css';
 
 const SearchTodo = ({ saveTodo, handleShowDone, showDone }) => {
-   const [value, setValue] = useState('');
 
- 
     return (
      <form >
       <div className="text">
@@ -18,13 +16,12 @@ const SearchTodo = ({ saveTodo, handleShowDone, showDone }) => {
           inputProps={{ 'aria-label': 'checkbox with small size' }}
         />
           <span className="search">Show done</span>
-          <TextField
-            variant="outlined"
-            placeholder="Search..."
-            margin="normal" 
-            onChange={(e) => setValue(e.target.value)}
-            onKeyPress={() => saveTodo(value)}
-           />
+        <TextField
+          variant="outlined"
+          placeholder="Search..."
+          margin="normal" 
+          onChange={(e) => saveTodo(e.target.value)}
+        />
        </div>
      </form>
   );
