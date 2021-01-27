@@ -36,6 +36,11 @@ export const setActiveCategory = (data) => ({
   data,
 })
 
+export const setActiveSubCategory = (data) => ({
+  type: constants.SET_ACTIVE_SUB_CATEGORY,
+  data,
+})
+
 export const addSubcategory = (data) => ({
   type: constants.ADD_SUBCATEGORY,
   data,
@@ -86,6 +91,11 @@ export const sendTask = (data) => ({
 
 export const getSearch = (data) => ({
   type: constants.GET_SEARCH,
+  data
+})
+
+export const setShowDone = (data) => ({
+  type: constants.SHOW_DONE,
   data
 })
 

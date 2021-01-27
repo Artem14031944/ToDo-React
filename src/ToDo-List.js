@@ -5,7 +5,7 @@ import TodoForm from './components/todoForm/todoForm';
 import TodoList from './components/todoList/todoList';
 import SearchTodo from './components/search/search';
 import CategoryList from './components/category/category';
-import { addCategory, addTask, editTask, getCategories, getSearch, getDoneSearch } from './actions';
+import { addCategory, addTask, editTask, getCategories, getSearch, setShowDone } from './actions';
 import AddCategories from './components/addCategories/addCategory';
 import Switches from './components/switch/switch';
 import ProgressBar from './components/progressBar/progressBar';
@@ -16,20 +16,23 @@ import './styles.css';
 
 
 const Tasks = () => {
-  useEffect(() => {
-    dispatch(getCategories())
-  }, [todos]);
-
+ 
   const dispatch = useDispatch()
   const categories = useSelector((state) => state.categories);
-  const progress = useSelector((state) => state.progress);
+  const progress = useSelector((state) => {
+    const tasks = state.tasks;
+    const doneTasks = state.tasks.filter(item => item.done === true);
+    const answer = doneTasks.length / tasks.length * 100
+    return answer
+  });
+  
   const todos = useSelector((state) => {
      if (state.searchText === '') {
-       if(state.activeCategory > 0) {
-        const category = state.categories.find(item => item.id === state.activeCategory)
-        if(category.children && category.children.length > 0) {
+       if(state.activeCategory !== '') {
+        const categoryChildren = state.categories.filter(item => item.parentId ===  state.activeCategory)
+        if(categoryChildren && categoryChildren.length > 0) {
           const newChildren = []
-          category.children.forEach(subcategory => {
+          categoryChildren.forEach(subcategory => {
             const subcategoryTasks = state.tasks.filter(item => item.category === subcategory.id)
             newChildren.push(...subcategoryTasks)
           });
@@ -41,26 +44,26 @@ const Tasks = () => {
        }
        return state.tasks
      } else {
-       return state.tasks.filter(item => item.text.toLowerCase().includes(state.searchText.toLowerCase()))
+       if(state.showDone) {
+        const newDoneTasks = state.tasks.filter(item => item.done).filter(item => item.text.toLowerCase().includes(state.searchText.toLowerCase()))
+        return newDoneTasks
+       } else {
+        return state.tasks.filter(item => item.text.toLowerCase().includes(state.searchText.toLowerCase()))
+       }
+       
      }});
   const activeCategory = useSelector((state) => state.activeCategory);
+  const showDone = useSelector((state) => state.showDone);
   const search = useSelector((state) => state.searchText);
   const [open, setOpen] = useState(false);
   const [activeTodo, setActiveTodo] = useState('');
-  // const [renderTodos, setRenderTodos] = useState(todos);
-  const [showDone, setShowDone] = useState(false);
-  
 
-  useEffect(()=> {
-    localStorage.setItem('todos', JSON.stringify(todos))
-   }, [])
+  useEffect(() => {
+    dispatch(getCategories())
+  }, [categories]);
   
   const searchTodo = data => {
-    if(showDone)  {
-      dispatch(getDoneSearch(data))
-    } else {
-      dispatch(getSearch(data))
-    }
+    dispatch(getSearch(data))
   };
 
   const handleClose = () => {
@@ -91,11 +94,11 @@ const Tasks = () => {
   };
   
   return (
-    <Scrollbars 
-      style={{ width: '100%', height: 750, }}
-      renderTrackVertical={props => <div {...props} className="track-vertical"/>}
-      renderThumbVertical={props => <div {...props} className="thumb-vertical"/>}
-      >
+    // <Scrollbars 
+    //   style={{ width: '100%', height: 750, }}
+    //   renderTrackVertical={props => <div {...props} className="track-vertical"/>}
+    //   renderThumbVertical={props => <div {...props} className="thumb-vertical"/>}
+    //   >
      <div className="App">
       <div className="item-header">
       <Switches />
@@ -106,7 +109,7 @@ const Tasks = () => {
        <div className="item-search">
         <SearchTodo
           showDone={showDone}
-          handleShowDone={() => setShowDone(!showDone)}
+          handleShowDone={() => dispatch(setShowDone())}
           search={search}   
           saveTodo={todoText => {
             const addText = todoText.trim();
@@ -114,8 +117,7 @@ const Tasks = () => {
         />
        </div>
          <ProgressBar
-          todos={todos}
-          // progress={progress}
+          progress={progress}
            />
           <div className="item-form">
             <div className = "category">
@@ -124,13 +126,19 @@ const Tasks = () => {
                   const trimmedText = cateText.trim();
                 if (trimmedText.length > 0) {
                   addNewCategory(trimmedText);}}}
-              /> 
-                <CategoryList
-                  categories={categories}
-                  parentId={null}  
-                  className='category' 
-                  activeCategory={activeCategory}
-                /> 
+               /> 
+                <Scrollbars 
+                  style={{ width: '100%', height: 440, }}
+                  renderTrackVertical={props => <div {...props} className="track-vertical"/>}
+                  renderThumbVertical={props => <div {...props} className="thumb-vertical"/>}
+                  >
+                  <CategoryList
+                    categories={categories}
+                    parentId={null}  
+                    className='category' 
+                    activeCategory={activeCategory}
+                  /> 
+                </Scrollbars>
             </div>
                <div className="task">
                 <div className="taskForm">
@@ -141,11 +149,17 @@ const Tasks = () => {
                       addTodo(trimmedText);}}}
                   />
                </div>
-              <TodoList 
-                todos={todos} 
-                handleCheckbox={handleCheckbox} 
-                handleEd={handleEd}
-              />
+                <Scrollbars 
+                  style={{ width: '100%', height: 440, }}
+                  renderTrackVertical={props => <div {...props} className="track-vertical"/>}
+                  renderThumbVertical={props => <div {...props} className="thumb-vertical"/>}
+                  >
+                  <TodoList 
+                    todos={todos} 
+                    handleCheckbox={handleCheckbox} 
+                    handleEd={handleEd}
+                  />
+                </Scrollbars>
             <Modal 
               open={open} 
               handleClose={() => handleClose()} 
@@ -154,18 +168,8 @@ const Tasks = () => {
          </div>
         </div>  
       </div>
-    </Scrollbars>
+    // </Scrollbars>
   );
 };
 
 export default Tasks;
-
-
-
-// git filter-branch --env-filter '
-//     if [ "$GIT_AUTHOR_NAME" = "Yazeed Bzadough" ]; then \
-//         export GIT_AUTHOR_NAME="Artem Melnikov" GIT_AUTHOR_EMAIL="artem141221@gmail.com"; \
-//     fi
-//     '
-
-//     yazeedb 

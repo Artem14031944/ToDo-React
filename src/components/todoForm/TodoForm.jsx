@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
 import Button  from '@material-ui/core/Button';
 import { setActiveCategory } from '../../actions';
@@ -11,7 +11,7 @@ const TodoForm = ({ saveTodo }) => {
    const [value, setValue] = useState('');
  
    const onClickBtnAll = () => {  
-    dispatch(setActiveCategory(0))
+    dispatch(setActiveCategory(''))
   };
    
     return (

@@ -3,58 +3,53 @@ import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   categories: [
-    { id: 1, parentId: null, title: "Category 1", children: null},
-    { id: 2, parentId: null, title: "Category 2", children: null},
-    { id: 3, parentId: null, title: "Category 3", children:  [
-      { id: 11, parentId: null, title: "SubCategory 1", children: null},
-      { id: 22, parentId: null, title: "SubCategory 2", children: null},
-      { id: 33, parentId: null, title: "SubCategory 3", children: null},
-    ]},
+    { id: '1', parentId: null, title: "Category 1", children: null},
+    { id: '2', parentId: null, title: "Category 2", children: null},
+    { id: '11', parentId: '3', title: "SubCategory 1", children: null},
+    { id: '22', parentId: '3', title: "SubCategory 2", children: null},
+    { id: '33', parentId: '3', title: "SubCategory 3", children: null},
+    { id: '3', parentId: null, title: "Category 3", children:  [ '11', '22', '33' ]},
    ],
-  podCategories:[],
+  subCategories:[],
   tasks: [
-    { id: uuidv4(),  category: 1, text: 'data', done: false},
-    { id: uuidv4(),  category: 1, text: 'task', done: false},
-    { id: uuidv4(),  category: 1, text: 'foo', done: false},
-    { id: uuidv4(),  category: 2, text: 'fin', done: false},
-    { id: uuidv4(),  category: 2, text: 'panda', done: false},
-    { id: uuidv4(),  category: 2, text: 'volvo', done: false},
-    { id: uuidv4(),  category: 3, text: 'zoo', done: false},
-    { id: uuidv4(),  category: 3, text: 'this', done: false},
-    { id: uuidv4(),  category: 3, text: 'the move', done: false},
-    { id: uuidv4(),  category: 11, text: 'sub-1', done: false},
-    { id: uuidv4(),  category: 22, text: 'sub-2', done: false},
-    { id: uuidv4(),  category: 33, text: 'sub-3', done: false},
+    { id: uuidv4(),  category: '1', text: 'data', done: false},
+    { id: uuidv4(),  category: '1', text: 'task', done: false},
+    { id: uuidv4(),  category: '1', text: 'foo', done: false},
+    { id: uuidv4(),  category: '2', text: 'fin', done: false},
+    { id: uuidv4(),  category: '2', text: 'panda', done: false},
+    { id: uuidv4(),  category: '2', text: 'volvo', done: false},
+    { id: uuidv4(),  category: '3', text: 'zoo', done: false},
+    { id: uuidv4(),  category: '3', text: 'this', done: false},
+    { id: uuidv4(),  category: '3', text: 'the move', done: false},
+    { id: uuidv4(),  category: '11', text: 'sub-1', done: false},
+    { id: uuidv4(),  category: '22', text: 'sub-2', done: false},
+    { id: uuidv4(),  category: '33', text: 'sub-3', done: false},
    ],
   searchText: '',
-  activeCategory:'',
+  activeCategory: '',
+  activeSubCategory:'',
+  subCategories:'',
   progress:'',
+  showDone: false,
 }
 
 function toDoReducer(state = initialState, action)  {
   switch (action.type) {
     case constants.ADD_CATEGORY:
-      return {
-        ...state,
-        categories: [ ...state.categories, action.data ] 
-      }
-    case constants.ADD_SUBCATEGORY:
-      const category2 = state.categories.find(item  => item.id === action.data.id)
-      let newCategory = {}
-      if(category2.children === null) {
-        newCategory  = { ... category2, children: [ action.data.subId] }
-      } else {
-        newCategory  = { ... category2, children: [ ...category2.children, action.data.subId] }
-      } console.log(newCategory, 'new')
-      const categories = state.categories.filter(item => item.id !== category2.id)
         return {
           ...state,
-          categories: [ ...categories, newCategory ] 
+          categories: [ ...state.categories, action.data ] 
         }
+
     case constants.SET_ACTIVE_CATEGORY:
       return {
         ...state,
         activeCategory: action.data 
+      }
+    case constants.SET_ACTIVE_SUB_CATEGORY:
+      return {
+        ...state,
+        activeSubCategory: action.data 
       }
     case constants.DELETE_CATEGORY:
       return {
@@ -92,13 +87,6 @@ function toDoReducer(state = initialState, action)  {
         ...state,
         tasks: [ ...state.tasks, action.data ] 
       }
-    // case constants.GET_TASKS_CATEGORY:
-    //     const parse = JSON.parse(localStorage.getItem('todos'));
-    //     const getCategoriesOne = parse.filter(item => item.category === action.data)
-    //       return {
-    //           ...state,
-    //           tasks: [ ...getCategoriesOne ] 
-    //       }
     case constants.SET_TASKS:
       return {
         ...state,
@@ -120,22 +108,15 @@ function toDoReducer(state = initialState, action)  {
         ...state,
         searchText: action.data
       }
-    case constants.GET_DONE_SEARCH:
-      const newDoneTasks = state.tasks.filter(item => item.done).filter(item => item.text.toLowerCase().includes(action.data.toLowerCase())) 
-        return {
-          ...state,
-          tasks: [ ...newDoneTasks ]
-        }
-    case constants.ALL_TASKS_SEARCH:
-      const allTasks = JSON.parse(localStorage.getItem('todos'))  
-        return {
-          ...state,
-          tasks: [ ...allTasks ]
-        }
     case constants.SET_BAR:
       return {
         ...state,
         progress: action.data  
+      }
+    case constants.SHOW_DONE:
+      return {
+        ...state,
+        showDone: !state.showDone
       }
      default:
       return state

@@ -1,6 +1,6 @@
 import React from 'react';
 import Switch from '@material-ui/core/Switch';
-import './style.css'
+import './switchStyle.css'
 
 export default function Switches() {
   return (

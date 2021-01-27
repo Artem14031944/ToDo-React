@@ -56,7 +56,6 @@ export default function Modal({ todo, open, handleClose }) {
               type="text"
               value={value}
               onChange={handleText}
-              // //defaultValue={todo.text}
              />
              <DialogContentText 
                color = 'black'>

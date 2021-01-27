@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import Tasks from './ToDo-List';
 import configureStore from './configureStore';
 import './styles.css';
-import Layout from './components/switch/Layout';
+import Layout from './components/switch/layout';
 
 const store = configureStore()
 
